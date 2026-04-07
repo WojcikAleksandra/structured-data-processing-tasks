@@ -23,11 +23,11 @@ Comments = pd.read_csv("data/Comments.csv.gz", compression = 'gzip')
 
 import sqlite3
 
-baza = 'data/pdu_pd5.db'
+baza = 'example.db'
 conn = sqlite3.connect(baza)
-# Comments.to_sql("Comments", conn)
-# Posts.to_sql("Posts", conn)
-# Users.to_sql("Users", conn)
+Comments.to_sql("Comments", conn)
+Posts.to_sql("Posts", conn)
+Users.to_sql("Users", conn)
 
 
 # 2.) Wyniki zapytań SQL
