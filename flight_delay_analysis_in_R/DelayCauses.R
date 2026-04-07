@@ -4,18 +4,16 @@ library("data.table")
 library("dplyr")
 library(ggplot2)
 
-# setwd("~/PDU")
-
-Airports <- as.data.table(read.csv("airports.csv"))
-Carriers <- as.data.table(read.csv("carriers.csv"))
-# Plane_data <- as.data.table(read.csv("plane-data.csv"))
-Variable_descriptions <- as.data.table(read.csv("variable-descriptions.csv"))
-df2008 <- as.data.table(read.csv("2008.csv.bz2"))
-df2007 <- as.data.table(read.csv("2007.csv.bz2"))
-df2006 <- as.data.table(read.csv("2006.csv.bz2"))
-df2005 <- as.data.table(read.csv("2005.csv.bz2"))
-df2004 <- as.data.table(read.csv("2004.csv.bz2"))
-df2003 <- as.data.table(read.csv("2003.csv.bz2"))
+Airports <- as.data.table(read.csv("data/airports.csv"))
+Carriers <- as.data.table(read.csv("data/carriers.csv"))
+Plane_data <- as.data.table(read.csv("data/plane-data.csv"))
+Variable_descriptions <- as.data.table(read.csv("data/variable-descriptions.csv"))
+df2008 <- as.data.table(read.csv("data/2008.csv.bz2"))
+df2007 <- as.data.table(read.csv("data/2007.csv.bz2"))
+df2006 <- as.data.table(read.csv("data/2006.csv.bz2"))
+df2005 <- as.data.table(read.csv("data/2005.csv.bz2"))
+df2004 <- as.data.table(read.csv("data/2004.csv.bz2"))
+df2003 <- as.data.table(read.csv("data/2003.csv.bz2"))
 
 
 # -------------------------------------------------------------------------------------------------------- #
