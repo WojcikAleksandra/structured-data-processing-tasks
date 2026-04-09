@@ -1,19 +1,28 @@
 # install.packages("tidyverse")
 
-library("data.table")
-library("dplyr")
+library(data.table)
+library(dplyr)
 library(ggplot2)
 
 Airports <- as.data.table(read.csv("data/airports.csv"))
 Carriers <- as.data.table(read.csv("data/carriers.csv"))
 Plane_data <- as.data.table(read.csv("data/plane-data.csv"))
 Variable_descriptions <- as.data.table(read.csv("data/variable-descriptions.csv"))
-df2008 <- as.data.table(read.csv("data/2008.csv.bz2"))
-# df2007 <- as.data.table(read.csv("data/2007.csv.bz2"))
-# df2006 <- as.data.table(read.csv("data/2006.csv.bz2"))
-# df2005 <- as.data.table(read.csv("data/2005.csv.bz2"))
-# df2004 <- as.data.table(read.csv("data/2004.csv.bz2"))
-df2003 <- as.data.table(read.csv("data/2003.csv.bz2"))
+
+years <- 2003:2008
+data_list <- list()
+
+for (y in years) {
+  file_path <- paste0("data/", y, ".csv.bz2")
+  
+  if (file.exists(file_path)) {
+    assign(paste0("df", y), as.data.table(read.csv(file_path)))
+  } else {
+    message("Brak pliku: ", y)
+  }
+}
+
+has_2003_2008 <- all(sapply(paste0("df", 2003:2008), exists))
 
 
 # -------------------------------------------------------------------------------------------------------- #
@@ -40,132 +49,136 @@ rm(total_delay)
 
 ###
 
-sum_delay_by_cause_2007 <- df2007[ArrDelay >= 15]
-
-sum_delay_by_cause_2007 <- sum_delay_by_cause_2007[, .(
-  CarrierDelay = sum(CarrierDelay),
-  WeatherDelay = sum(WeatherDelay),
-  NASDelay = sum(NASDelay),
-  SecurityDelay = sum(SecurityDelay),
-  LateAircraftDelay = sum(LateAircraftDelay)),
-  by = Year]
-
-total_delay <- sum(sum_delay_by_cause_2007[, 2:6])
-
-sum_delay_by_cause_2007 <- mutate(sum_delay_by_cause_2007, TotalDelay = total_delay)
-
-rm(total_delay)
-
-###
-
-sum_delay_by_cause_2006 <- df2006[ArrDelay >= 15]
-
-sum_delay_by_cause_2006 <- sum_delay_by_cause_2006[, .(
-  CarrierDelay = sum(CarrierDelay),
-  WeatherDelay = sum(WeatherDelay),
-  NASDelay = sum(NASDelay),
-  SecurityDelay = sum(SecurityDelay),
-  LateAircraftDelay = sum(LateAircraftDelay)),
-  by = Year]
-
-total_delay <- sum(sum_delay_by_cause_2006[, 2:6])
-
-sum_delay_by_cause_2006 <- mutate(sum_delay_by_cause_2006, TotalDelay = total_delay)
-
-rm(total_delay)
+if (has_2003_2008) {
+  
+  sum_delay_by_cause_2007 <- df2007[ArrDelay >= 15]
+  
+  sum_delay_by_cause_2007 <- sum_delay_by_cause_2007[, .(
+    CarrierDelay = sum(CarrierDelay),
+    WeatherDelay = sum(WeatherDelay),
+    NASDelay = sum(NASDelay),
+    SecurityDelay = sum(SecurityDelay),
+    LateAircraftDelay = sum(LateAircraftDelay)),
+    by = Year]
+  
+  total_delay <- sum(sum_delay_by_cause_2007[, 2:6])
+  
+  sum_delay_by_cause_2007 <- mutate(sum_delay_by_cause_2007, TotalDelay = total_delay)
+  
+  rm(total_delay)
 
 ###
 
-sum_delay_by_cause_2005 <- df2005[ArrDelay >= 15]
-
-sum_delay_by_cause_2005 <- sum_delay_by_cause_2005[, .(
-  CarrierDelay = sum(CarrierDelay),
-  WeatherDelay = sum(WeatherDelay),
-  NASDelay = sum(NASDelay),
-  SecurityDelay = sum(SecurityDelay),
-  LateAircraftDelay = sum(LateAircraftDelay)),
-  by = Year]
-
-total_delay <- sum(sum_delay_by_cause_2005[, 2:6])
-
-sum_delay_by_cause_2005 <- mutate(sum_delay_by_cause_2005, TotalDelay = total_delay)
-
-rm(total_delay)
-
-###
-
-sum_delay_by_cause_2004 <- df2004[ArrDelay >= 15]
-
-sum_delay_by_cause_2004 <- sum_delay_by_cause_2004[, .(
-  CarrierDelay = sum(CarrierDelay),
-  WeatherDelay = sum(WeatherDelay),
-  NASDelay = sum(NASDelay),
-  SecurityDelay = sum(SecurityDelay),
-  LateAircraftDelay = sum(LateAircraftDelay)),
-  by = Year]
-
-total_delay <- sum(sum_delay_by_cause_2004[, 2:6])
-
-sum_delay_by_cause_2004 <- mutate(sum_delay_by_cause_2004, TotalDelay = total_delay)
-
-rm(total_delay)
+  sum_delay_by_cause_2006 <- df2006[ArrDelay >= 15]
+  
+  sum_delay_by_cause_2006 <- sum_delay_by_cause_2006[, .(
+    CarrierDelay = sum(CarrierDelay),
+    WeatherDelay = sum(WeatherDelay),
+    NASDelay = sum(NASDelay),
+    SecurityDelay = sum(SecurityDelay),
+    LateAircraftDelay = sum(LateAircraftDelay)),
+    by = Year]
+  
+  total_delay <- sum(sum_delay_by_cause_2006[, 2:6])
+  
+  sum_delay_by_cause_2006 <- mutate(sum_delay_by_cause_2006, TotalDelay = total_delay)
+  
+  rm(total_delay)
 
 ###
 
-sum_delay_by_cause_2003 <- df2003[Month >= 6 & ArrDelay >= 15]
+  sum_delay_by_cause_2005 <- df2005[ArrDelay >= 15]
+  
+  sum_delay_by_cause_2005 <- sum_delay_by_cause_2005[, .(
+    CarrierDelay = sum(CarrierDelay),
+    WeatherDelay = sum(WeatherDelay),
+    NASDelay = sum(NASDelay),
+    SecurityDelay = sum(SecurityDelay),
+    LateAircraftDelay = sum(LateAircraftDelay)),
+    by = Year]
+  
+  total_delay <- sum(sum_delay_by_cause_2005[, 2:6])
+  
+  sum_delay_by_cause_2005 <- mutate(sum_delay_by_cause_2005, TotalDelay = total_delay)
+  
+  rm(total_delay)
 
-sum_delay_by_cause_2003 <- sum_delay_by_cause_2003[, .(
-  CarrierDelay = sum(CarrierDelay),
-  WeatherDelay = sum(WeatherDelay),
-  NASDelay = sum(NASDelay),
-  SecurityDelay = sum(SecurityDelay),
-  LateAircraftDelay = sum(LateAircraftDelay)),
-  by = Year]
+###
 
-total_delay <- sum(sum_delay_by_cause_2003[, 2:6])
+  sum_delay_by_cause_2004 <- df2004[ArrDelay >= 15]
+  
+  sum_delay_by_cause_2004 <- sum_delay_by_cause_2004[, .(
+    CarrierDelay = sum(CarrierDelay),
+    WeatherDelay = sum(WeatherDelay),
+    NASDelay = sum(NASDelay),
+    SecurityDelay = sum(SecurityDelay),
+    LateAircraftDelay = sum(LateAircraftDelay)),
+    by = Year]
+  
+  total_delay <- sum(sum_delay_by_cause_2004[, 2:6])
+  
+  sum_delay_by_cause_2004 <- mutate(sum_delay_by_cause_2004, TotalDelay = total_delay)
+  
+  rm(total_delay)
 
-sum_delay_by_cause_2003 <- mutate(sum_delay_by_cause_2003, TotalDelay = total_delay)
+###
 
-rm(total_delay)
+  sum_delay_by_cause_2003 <- df2003[Month >= 6 & ArrDelay >= 15]
+  
+  sum_delay_by_cause_2003 <- sum_delay_by_cause_2003[, .(
+    CarrierDelay = sum(CarrierDelay),
+    WeatherDelay = sum(WeatherDelay),
+    NASDelay = sum(NASDelay),
+    SecurityDelay = sum(SecurityDelay),
+    LateAircraftDelay = sum(LateAircraftDelay)),
+    by = Year]
+  
+  total_delay <- sum(sum_delay_by_cause_2003[, 2:6])
+  
+  sum_delay_by_cause_2003 <- mutate(sum_delay_by_cause_2003, TotalDelay = total_delay)
+  
+  rm(total_delay)
 
 ### tabela wynikowa: 
 
-sum_delay <- rbind(sum_delay_by_cause_2003, sum_delay_by_cause_2004, sum_delay_by_cause_2005, sum_delay_by_cause_2006, 
-                   sum_delay_by_cause_2007, sum_delay_by_cause_2008)
-
-total_delay <- sum(sum_delay[, TotalDelay])
-
-sum_delay <- sum_delay[, .(
-  CarrierDelay = sum(CarrierDelay),
-  WeatherDelay = sum(WeatherDelay),
-  NASDelay = sum(NASDelay),
-  SecurityDelay = sum(SecurityDelay),
-  LateAircraftDelay = sum(LateAircraftDelay))]
-
-agg_result_1 <- sum_delay[, .(
-  CarrierDelay = (CarrierDelay / total_delay) * 100,
-  WeatherDelay = (WeatherDelay / total_delay) * 100,
-  NASDelay = (NASDelay / total_delay) * 100,
-  SecurityDelay = (SecurityDelay / total_delay) * 100,
-  LateAircraftDelay = (LateAircraftDelay / total_delay) * 100)]
-
-rm(total_delay)
+  sum_delay <- rbind(sum_delay_by_cause_2003, sum_delay_by_cause_2004, sum_delay_by_cause_2005, sum_delay_by_cause_2006, 
+                     sum_delay_by_cause_2007, sum_delay_by_cause_2008)
+  
+  total_delay <- sum(sum_delay[, TotalDelay])
+  
+  sum_delay <- sum_delay[, .(
+    CarrierDelay = sum(CarrierDelay),
+    WeatherDelay = sum(WeatherDelay),
+    NASDelay = sum(NASDelay),
+    SecurityDelay = sum(SecurityDelay),
+    LateAircraftDelay = sum(LateAircraftDelay))]
+  
+  agg_result_1 <- sum_delay[, .(
+    CarrierDelay = (CarrierDelay / total_delay) * 100,
+    WeatherDelay = (WeatherDelay / total_delay) * 100,
+    NASDelay = (NASDelay / total_delay) * 100,
+    SecurityDelay = (SecurityDelay / total_delay) * 100,
+    LateAircraftDelay = (LateAircraftDelay / total_delay) * 100)]
+  
+  rm(total_delay)
 
 ### wykres kołowy:
 
-values <- unlist(agg_result_1[1,])
-labels_2 <- paste(round(values, 2), "%", sep = "")
-labels_1 <- paste(paste(names(agg_result_1), ": ", sep = ""), labels_2, sep = "")
+  values <- unlist(agg_result_1[1,])
+  labels_2 <- paste(round(values, 2), "%", sep = "")
+  labels_1 <- paste(paste(names(agg_result_1), ": ", sep = ""), labels_2, sep = "")
+  
+  plot_1 <- ggplot(data.frame(x = labels_1, y = values), aes(x = "", y = y, fill = x)) +
+    geom_bar(width = 1, stat = "identity", color = "white") +
+    coord_polar(theta = "y") +
+    scale_fill_manual(values = c("skyblue", "lightpink", "lightgreen", "orchid", "#FFCC99")) +
+    labs(title = "Procentowy udział przyczyn opóźnień lotów \nw całkowitym czasie opóźnienia w latach 2003-2008") +
+    theme_void() +
+    theme(plot.title = element_text(size = 20), plot.margin = unit(c(5, 5, 5, 5), "mm"), legend.text = element_text(size = 12), 
+          legend.title = NULL)
+  plot_1
 
-plot_1 <- ggplot(data.frame(x = labels_1, y = values), aes(x = "", y = y, fill = x)) +
-  geom_bar(width = 1, stat = "identity", color = "white") +
-  coord_polar(theta = "y") +
-  scale_fill_manual(values = c("skyblue", "lightpink", "lightgreen", "orchid", "#FFCC99")) +
-  labs(title = "Procentowy udział przyczyn opóźnień lotów \nw całkowitym czasie opóźnienia w latach 2003-2008") +
-  theme_void() +
-  theme(plot.title = element_text(size = 20), plot.margin = unit(c(5, 5, 5, 5), "mm"), legend.text = element_text(size = 12), 
-        legend.title = NULL)
-plot_1
+}
 
 
 # ------------------------------------------------------------------------------------------- #
@@ -185,19 +198,19 @@ delay_data <- as.data.frame(delay_data)
 ### wykres słupkowy: (próba utworzenia wykresu, w którym dla każdego roku jest 5 słupków odpowiadających całkowitemu czasowi 
 # opóźnienia dla każdej przyczyny)
 
-# plot_2 <- ggplot(delay_data, aes(x = Year)) +
-#  geom_bar(aes(y = CarrierDelay), stat = "identity", fill = "skyblue", width = 0.1) +
-#  geom_bar(aes(y = WeatherDelay), stat = "identity", fill = "#FFCC99", width = 0.1) +
-#  geom_bar(aes(y = NASDelay), stat = "identity", fill = "lightgreen", width = 0.1) +
-#  geom_bar(aes(y = SecurityDelay), stat = "identity", fill = "orchid", width = 0.1) +
-#  geom_bar(aes(y = LateAircraftDelay), stat = "identity", fill = "lightpink", width = 0.1) +
-#  labs(x = "Year", y = "Delay Hours (1000 h)") +
-#  scale_fill_manual(values = c("skyblue", "#FFCC99", "lightgreen", "orchid", "lightpink"),
-#                    labels = c("Carrier Delay", "Weather Delay", "NAS Delay", "Security Delay", "Late Aircraft Delay")) +
-#  scale_y_continuous(limits = c(0, 700), breaks = seq(0, 700, by = 50)) +
-#  labs(title = "Całkowite opóźnienie według przyczyny w latach 2003-2008") +
-#  theme_minimal()
-# plot_2
+plot_2 <- ggplot(delay_data, aes(x = Year)) +
+ geom_bar(aes(y = CarrierDelay), stat = "identity", fill = "skyblue", width = 0.1) +
+ geom_bar(aes(y = WeatherDelay), stat = "identity", fill = "#FFCC99", width = 0.1) +
+ geom_bar(aes(y = NASDelay), stat = "identity", fill = "lightgreen", width = 0.1) +
+ geom_bar(aes(y = SecurityDelay), stat = "identity", fill = "orchid", width = 0.1) +
+ geom_bar(aes(y = LateAircraftDelay), stat = "identity", fill = "lightpink", width = 0.1) +
+ labs(x = "Year", y = "Delay Hours (1000 h)") +
+ scale_fill_manual(values = c("skyblue", "#FFCC99", "lightgreen", "orchid", "lightpink"),
+                   labels = c("Carrier Delay", "Weather Delay", "NAS Delay", "Security Delay", "Late Aircraft Delay")) +
+ scale_y_continuous(limits = c(0, 700), breaks = seq(0, 700, by = 50)) +
+ labs(title = "Całkowite opóźnienie według przyczyny w latach 2003-2008") +
+ theme_minimal()
+plot_2
 
 
 # ------------------------------------------------------------------- #
