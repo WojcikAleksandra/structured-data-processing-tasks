@@ -1,7 +1,7 @@
 # install.packages("data.table")
 library(data.table)
 
-df_plane_data <- read.csv("plane-data.csv")
+df_plane_data <- read.csv("data/plane-data.csv")
 
 years <- 2000:2008
 
@@ -10,7 +10,7 @@ for (y in years) {
   
   if (file.exists(file_path)) {
     assign(paste0("df", y), read.csv(file_path))
-    assign(paste0("dt", y), data.table(paste0("df", y))[, c("Year", "ArrDelay", "TailNum")])
+    assign(paste0("dt", y), data.table(get(paste0("df", y)))[, c("Year", "ArrDelay", "TailNum")])
   } else {
     message("Brak pliku: ", y)
   }
@@ -23,7 +23,6 @@ if (has_2000_2008) {
 } else {
   dtcombined <- dt2008
 }
-
 
 dtplanes <- data.table(df_plane_data)[, c("tailnum", "year")]
 setnames(dtplanes, old = "tailnum", new = "TailNum")
