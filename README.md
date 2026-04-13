@@ -1,3 +1,3 @@
 # MyProjects
 
-A repository containing additional projects developed during my engineering studies in Data Science at Warsaw University of Technology.
+A repository containing tasks completed during *Structured Data Processing* course at Warsaw University of Technology.
